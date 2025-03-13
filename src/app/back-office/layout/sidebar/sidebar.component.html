@@ -1,0 +1,135 @@
+<div class="dashboard_sidebar_menu dn-992" id="sidebar">
+    <ul class="sidebar-menu">
+        <!-- Logo -->
+        <li class="header">
+            <img src="images/header-logo.png" alt="Admin Logo">
+        </li>
+
+        <!-- Main Section -->
+        <li class="title"><span>Main</span></li>
+        <li class="treeview">
+            <a href="/admin/dashboard">
+                <i class="flaticon-layers"></i>
+                <span>Dashboard</span>
+            </a>
+        </li>
+
+        <!-- Property Management -->
+        <li class="title"><span>Property Management</span></li>
+        <li class="treeview">
+            <a routerLink="/admin/properties"> <!-- Use routerLink instead of href -->
+              <i class="flaticon-home"></i>
+              <span>Properties</span>
+              <i class="fa fa-angle-down pull-right"></i>
+            </a>
+            <ul class="treeview-menu">
+              <li>
+                <a routerLink="/admin/properties"> <!-- Use routerLink instead of href -->
+                  <i class="fa fa-circle"></i> All Properties
+                </a>
+              </li>
+              <li>
+                <a routerLink="/admin/properties/pending"> <!-- Use routerLink instead of href -->
+                  <i class="fa fa-circle"></i> Pending Approvals
+                </a>
+              </li>
+              <li>
+                <a routerLink="/admin/properties/add"> <!-- Use routerLink instead of href -->
+                  <i class="fa fa-circle"></i> Add New Property
+                </a>
+              </li>
+            </ul>
+          </li>
+
+        <!-- User Management -->
+        <li class="title"><span>User Management</span></li>
+        <li class="treeview">
+            <a routerLink="/admin/users">
+                <i class="flaticon-user"></i>
+                <span>Users</span>
+                <i class="fa fa-angle-down pull-right"></i>
+            </a>
+            <ul class="treeview-menu">
+                <li><a href="/admin/users/all"><i class="fa fa-circle"></i> All Users</a></li>
+                <li><a href="/admin/users/agents"><i class="fa fa-circle"></i> Agents</a></li>
+                <li><a href="/admin/users/buyers"><i class="fa fa-circle"></i> Buyers</a></li>
+            </ul>
+        </li>
+
+        <!-- Payment & Transactions -->
+        <li class="title"><span>Payments & Transactions</span></li>
+        <li class="treeview">
+            <a href="/admin/payments">
+                <i class="flaticon-money"></i>
+                <span>Payments</span>
+                <i class="fa fa-angle-down pull-right"></i>
+            </a>
+            <ul class="treeview-menu">
+                <li><a href="/admin/payments/all"><i class="fa fa-circle"></i> All Payments</a></li>
+                <li><a href="/admin/payments/refunds"><i class="fa fa-circle"></i> Refunds</a></li>
+            </ul>
+        </li>
+        <li>
+            <a href="/admin/transactions">
+                <i class="flaticon-credit-card"></i>
+                <span>Transactions</span>
+            </a>
+        </li>
+
+        <!-- Posts & Notifications -->
+        <li class="title"><span>Posts & Notifications</span></li>
+        <li>
+            <a routerLink="/admin/posts">
+                <i class="flaticon-edit"></i>
+                <span>Posts</span>
+            </a>
+        </li>
+        <li>
+            <a href="/admin/notifications">
+                <i class="flaticon-bell"></i>
+                <span>Notifications</span>
+            </a>
+        </li>
+
+        <!-- Chats & Reviews -->
+        <li class="title"><span>Chats & Reviews</span></li>
+        <li>
+            <a href="/admin/chats">
+                <i class="flaticon-chat"></i>
+                <span>Chats</span>
+            </a>
+        </li>
+        <li>
+            <a href="/admin/reviews">
+                <i class="flaticon-star"></i>
+                <span>Reviews</span>
+            </a>
+        </li>
+
+        <!-- Favorites Analytics -->
+        <li class="title"><span>Analytics</span></li>
+        <li>
+            <a href="/admin/favorites">
+                <i class="flaticon-heart"></i>
+                <span>Favorites</span>
+            </a>
+        </li>
+
+        <!-- Settings -->
+        <li class="title"><span>Settings</span></li>
+        <li>
+            <a href="/admin/settings">
+                <i class="flaticon-settings"></i>
+                <span>Platform Settings</span>
+            </a>
+        </li>
+
+        <!-- Logout -->
+        <li>
+            <a href="/logout">
+                <i class="flaticon-logout"></i>
+                <span>Logout</span>
+            </a>
+        </li>
+    </ul>
+</div>

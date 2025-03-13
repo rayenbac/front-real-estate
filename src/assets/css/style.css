@@ -12242,8 +12242,9 @@ a.btn.btn_error{
   overflow-y: scroll;
   position: fixed;
   top: 0;
-  width: 295px;
+  width: 250px;
   z-index: 9;
+
 }
 .sidebar-menu::-webkit-scrollbar {
   border-radius: 6px;
@@ -12261,7 +12262,7 @@ a.btn.btn_error{
   border-radius: 6px;
 }
 .sidebar-menu::-webkit-scrollbar-thumb {
-  background-color: #1d293e !important; // manage scrollbar thumb background color here
+  background-color: #1d293e !important; 
   border-radius: 6px;
 }
 .sidebar-menu li{
