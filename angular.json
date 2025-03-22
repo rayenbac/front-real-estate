@@ -36,11 +36,11 @@
             "polyfills": ["zone.js"],
             "scripts": [],
             "styles": [
-  "src/assets/css/bootstrap.min.css",
-  "src/assets/css/style.css",
-  "src/assets/css/responsive.css",
-  "src/styles.css"
-],
+              "src/assets/css/bootstrap.min.css",
+              "src/assets/css/style.css",
+              "src/assets/css/responsive.css",
+              "src/styles.css"
+            ],
 
             "tsConfig": "tsconfig.app.json"
           }
