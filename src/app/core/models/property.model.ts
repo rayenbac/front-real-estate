@@ -47,11 +47,11 @@ export interface PropertyPricing {
   pricePerSquareFoot?: number;
   maintenanceFee?: number;
   propertyTax?: number;
-  priceHistory: {
-      date: Date;
-      price: number;
-      priceType: 'listing' | 'sale' | 'adjustment';
-  }[];
+  // priceHistory: {
+  //     date: Date;
+  //     price: number;
+  //     priceType: 'listing' | 'sale' | 'adjustment';
+  // }[];
 }
 
 export interface Property {

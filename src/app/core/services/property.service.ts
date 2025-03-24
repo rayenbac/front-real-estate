@@ -22,15 +22,17 @@ export class PropertyService {
     return this.http.get<Property>(`${this.apiUrl}/${id}`);
   }
 
-  // Add a new property (send JSON data)
-  addProperty(propertyData: Property): Observable<Property> {
-    return this.http.post<Property>(this.apiUrl, propertyData);
-  }
+  
+// Add a new property (send form-data)
+addProperty(formData: FormData): Observable<Property> {
+  return this.http.post<Property>(this.apiUrl, formData);
+}
 
-  // Update a property (send JSON data)
-  updateProperty(id: string, propertyData: Property): Observable<Property> {
-    return this.http.put<Property>(`${this.apiUrl}/${id}`, propertyData);
-  }
+// Update a property (send form-data)
+updateProperty(id: string, formData: FormData): Observable<Property> {
+  return this.http.put<Property>(`${this.apiUrl}/${id}`, formData);
+}
+
 
   // Delete a property
   deleteProperty(id: string): Observable<void> {

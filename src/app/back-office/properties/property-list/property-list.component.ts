@@ -17,6 +17,16 @@ export class PropertyListComponent implements OnInit {
 
   constructor(private propertyService: PropertyService) {}
 
+
+  // In your component.ts file
+
+
+getImageUrl(media: any[]): string {
+  if (media && media.length > 0) {
+    return 'http://localhost:3000' + media[0].url;
+  }
+  return 'assets/images/default-property.jpg';
+}
   ngOnInit(): void {
     this.loadProperties(); // Load properties when the component initializes
   }
