@@ -1,8 +1,8 @@
 export interface Category {
-    id?: string; // Optional, since MongoDB auto-generates it
+    _id: string; // MongoDB ID
     name: string;
-    description?: string;
-    properties?: string[]; // Array of Property IDs (referencing Property model)
-    createdAt?: Date;
-    updatedAt?: Date;
-  }
+    description: string;
+    properties: string[]; // Array of Property IDs (referencing Property model)
+    createdAt: Date;
+    updatedAt: Date;
+}

@@ -1,45 +1,47 @@
 import { Component, OnInit } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { RouterModule } from '@angular/router';
-import { Post } from '../../../core/models/post.model';
+import { CommonModule } from '@angular/common';  // ✅ Import this
+import { Router } from '@angular/router';
 import { PostService } from '../../../core/services/post.service';
+import { Post } from '../../../core/models/post.model';
 import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-post-list',
-  standalone: true,
-  imports: [CommonModule, RouterModule],
   templateUrl: './post-list.component.html',
-  styleUrls: ['./post-list.component.css']
+  styleUrls: ['./post-list.component.scss'],
+  standalone: true,
+  imports: [CommonModule]  // ✅ Add CommonModule here
 })
 export class PostListComponent implements OnInit {
   posts: Post[] = [];
+  loading = false;
+  error: string | null = null;
 
-  constructor(private postService: PostService) {}
+  constructor(
+    private postService: PostService,
+    private router: Router
+  ) {}
 
   ngOnInit(): void {
     this.loadPosts();
   }
 
   loadPosts(): void {
+    this.loading = true;
     this.postService.getPosts().subscribe({
-      next: (data) => {
-        console.log('Posts loaded:', data);
-        this.posts = data;
+      next: (posts: Post[]) => {
+        console.log('Loaded posts:', posts);  // Debugging output
+        this.posts = posts;
+        this.loading = false;
       },
-      error: (error) => {
-        console.error('Error loading posts:', error);
-        this.showErrorAlert('Failed to load posts');
+      error: () => {
+        this.showErrorAlert('Error loading posts');
+        this.loading = false;
       }
     });
   }
 
-  deletePost(id: string): void {
-    if (!id) {
-      console.error('Invalid post ID');
-      return;
-    }
-
+  onDelete(postId: string): void {
     Swal.fire({
       title: 'Are you sure?',
       text: "You won't be able to revert this!",
@@ -50,17 +52,16 @@ export class PostListComponent implements OnInit {
       confirmButtonText: 'Yes, delete it!'
     }).then((result) => {
       if (result.isConfirmed) {
-        this.postService.deletePost(id).subscribe({
+        this.postService.deletePost(postId).subscribe({
           next: () => {
-            this.posts = this.posts.filter(post => post._id !== id);
+            this.posts = this.posts.filter(post => post._id !== postId);
             Swal.fire(
               'Deleted!',
               'Post has been deleted successfully.',
               'success'
             );
           },
-          error: (error) => {
-            console.error('Error deleting post:', error);
+          error: () => {
             this.showErrorAlert('Failed to delete post');
           }
         });
@@ -74,5 +75,17 @@ export class PostListComponent implements OnInit {
       title: 'Error',
       text: message
     });
+  }
+
+  onAddPost(): void {
+    this.router.navigate(['/admin/posts/add']);
+  }
+
+  onEditPost(postId: string): void {
+    this.router.navigate(['/admin/posts/edit', postId]);
+  }
+
+  onViewDetails(postId: string): void {
+    this.router.navigate(['/admin/posts', postId]);
   }
 }

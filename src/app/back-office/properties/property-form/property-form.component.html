@@ -264,7 +264,8 @@
                       <div class="col-lg-4 col-xl-4">
                         <div class="my_profile_setting_input ui_kit_select_search form-group">
                           <label>Bedrooms</label>
-                          <select class="selectpicker form-control" data-live-search="true" data-width="100%" formControlName="bedrooms">
+                          <select class="selectpicker form-control" data-live-search="true" data-width="100%"
+                            formControlName="bedrooms">
                             <option value="1">1</option>
                             <option value="2">2</option>
                             <option value="3">3</option>
@@ -274,12 +275,13 @@
                           </select>
                         </div>
                       </div>
-              
+
                       <!-- Bathrooms -->
                       <div class="col-lg-4 col-xl-4">
                         <div class="my_profile_setting_input ui_kit_select_search form-group">
                           <label>Bathrooms</label>
-                          <select class="selectpicker form-control" data-live-search="true" data-width="100%" formControlName="bathrooms">
+                          <select class="selectpicker form-control" data-live-search="true" data-width="100%"
+                            formControlName="bathrooms">
                             <option value="1">1</option>
                             <option value="2">2</option>
                             <option value="3">3</option>
@@ -289,12 +291,13 @@
                           </select>
                         </div>
                       </div>
-              
+
                       <!-- Half Bathrooms -->
                       <div class="col-lg-4 col-xl-4">
                         <div class="my_profile_setting_input ui_kit_select_search form-group">
                           <label>Half Bathrooms</label>
-                          <select class="selectpicker form-control" data-live-search="true" data-width="100%" formControlName="halfBathrooms">
+                          <select class="selectpicker form-control" data-live-search="true" data-width="100%"
+                            formControlName="halfBathrooms">
                             <option value="0">0</option>
                             <option value="1">1</option>
                             <option value="2">2</option>
@@ -307,7 +310,7 @@
                       </div>
                     </div>
                   </div>
-              
+
                   <!-- Size Details Section -->
                   <div class="col-lg-12" formGroupName="size">
                     <h4 class="mb30">Size Details</h4>
@@ -319,7 +322,7 @@
                           <input type="text" class="form-control" id="sizeTotal" formControlName="total">
                         </div>
                       </div>
-              
+
                       <!-- Indoor Size -->
                       <div class="col-lg-3 col-xl-3">
                         <div class="my_profile_setting_input form-group">
@@ -327,7 +330,7 @@
                           <input type="text" class="form-control" id="sizeIndoor" formControlName="indoor">
                         </div>
                       </div>
-              
+
                       <!-- Outdoor Size -->
                       <div class="col-lg-3 col-xl-3">
                         <div class="my_profile_setting_input form-group">
@@ -335,7 +338,7 @@
                           <input type="text" class="form-control" id="sizeOutdoor" formControlName="outdoor">
                         </div>
                       </div>
-              
+
                       <!-- Unit -->
                       <div class="col-lg-3 col-xl-3">
                         <div class="my_profile_setting_input form-group">
@@ -592,105 +595,112 @@
               </div>
 
 
+              <!-- Media Section -->
               <div class="my_dashboard_review mt30">
-  <div class="row">
-    <!-- Media Section -->
-    <div class="col-lg-12">
-      <h4 class="mb30">Media</h4>
+                <div class="row">
+                  <div class="col-lg-12">
+                    <h4 class="mb30">Media</h4>
 
-      <!-- Media Upload Section -->
-      <div class="col-lg-12">
-        <div class="portfolio_upload">
-          <input type="file" name="images" (change)="onFileChange($event)" multiple accept="image/*">
-          <div class="icon"><span class="flaticon-download"></span></div>
-          <p>Drag and drop images here or click to select files</p>
-          <small class="form-text text-muted">You can upload up to 10 images. Each image should be less than 5MB.</small>
-        </div>
-      </div>
+                    <!-- Existing Images Preview -->
+                    <div class="col-lg-12 mb-3" *ngIf="uploadedImages.length > 0">
+                      <h5>Current Images</h5>
+                      <div class="row">
+                        <div class="col-sm-4 col-md-3 mb-3" *ngFor="let image of uploadedImages; let i = index">
+                          <div class="card h-100">
+                            <img [src]="image.url" [alt]="image.name" class="card-img-top" style="height: 200px; object-fit: cover;">
+                            <div class="card-body p-2">
+                              <p class="card-text small mb-0">{{image.name}}</p>
+                              <p class="card-text small text-muted" *ngIf="i === 0">(Primary Image)</p>
+                              <button type="button" class="btn btn-danger btn-sm mt-2" (click)="deleteImage(i)">
+                                <i class="fa fa-trash"></i> Remove
+                              </button>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
 
-      <!-- Uploaded Images Preview -->
-      <div class="col-lg-12">
-        <ul class="mb0">
-          <li class="list-inline-item" *ngFor="let image of uploadedImages; let i = index">
-            <div class="portfolio_item">
-              <img class="img-fluid" [src]="image.url" [alt]="image.name">
-              <div class="edu_stats_list" data-toggle="tooltip" data-placement="top" title="Delete">
-                <a href="#" (click)="deleteImage(i)"><span class="flaticon-garbage"></span></a>
+                    <!-- Upload New Images -->
+                    <div class="col-lg-12">
+                      <div class="portfolio_upload">
+                        <div class="upload-area" (dragover)="$event.preventDefault()" (drop)="$event.preventDefault(); onFileChange($event)">
+                          <input type="file" name="images" (change)="onFileChange($event)" multiple accept="image/*" style="opacity: 0; position: absolute; width: 100%; height: 100%; cursor: pointer;">
+                          <div class="icon"><span class="flaticon-download"></span></div>
+                          <p>Drag and drop images here or click to select files</p>
+                          <small class="form-text text-muted">
+                            You can upload up to 10 images. Each image should be less than 5MB.
+                            <br>Supported formats: JPG, PNG, GIF
+                          </small>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
               </div>
-            </div>
-          </li>
-        </ul>
-      </div>
 
-      <!-- Media URL Input -->
-      <div formArrayName="media">
-        <div class="row">
-          <div class="col-lg-12">
-            <div class="my_profile_setting_input form-group">
-              <label>Media URL</label>
-              <input type="text" class="form-control" [formControlName]="i" *ngFor="let media of mediaControls; let i = index" />
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
+              <!-- Attachments Section -->
+              <div class="my_dashboard_review mt30">
+                <div class="row">
+                  <div class="col-lg-12" formArrayName="attachments">
+                    <h4 class="mb30">Attachments</h4>
+                    <div class="col-xl-6">
+                      <div class="resume_uploader mb30">
+                        <form class="form-inline">
+                          <input class="upload-path" placeholder="No file selected">
+                          <label class="upload">
+                            <input type="file" (change)="onAttachmentChange($event)">
+                            Select Attachment
+                          </label>
+                        </form>
+                      </div>
+                    </div>
+                    <div class="row">
+                      <div class="col-lg-12">
+                        <div class="my_profile_setting_input form-group">
+                          <label>Attachment URL</label>
+                          <input type="text" class="form-control" [formControlName]="i" *ngFor="let attachment of attachmentControls; let i = index" />
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
 
-    <!-- Attachments Section -->
-    <div class="col-lg-12" formArrayName="attachments">
-      <h4 class="mb30">Attachments</h4>
+              <!-- Virtual Tour Section -->
+              <div class="my_dashboard_review mt30">
+                <div class="row">
+                  <div class="col-lg-12" formGroupName="virtualTour">
+                    <h4 class="mb30">Virtual Tour</h4>
+                    <div class="row">
+                      <div class="col-lg-6 col-xl-6">
+                        <div class="my_profile_setting_input form-group">
+                          <label for="virtualTourUrl">Virtual Tour URL</label>
+                          <input type="text" class="form-control" id="virtualTourUrl" formControlName="url" />
+                        </div>
+                      </div>
+                      <div class="col-lg-6 col-xl-6">
+                        <div class="my_profile_setting_input form-group">
+                          <label for="virtualTourProvider">Provider</label>
+                          <input type="text" class="form-control" id="virtualTourProvider" formControlName="provider" />
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
 
-      <!-- Attachment Upload Section -->
-      <div class="col-xl-6">
-        <div class="resume_uploader mb30">
-          <form class="form-inline">
-            <input class="upload-path" placeholder="No file selected">
-            <label class="upload">
-              <input type="file" (change)="onAttachmentChange($event)">
-              Select Attachment
-            </label>
-          </form>
-        </div>
-      </div>
+              <!-- Cancel and Submit Buttons -->
+              <div class="my_dashboard_review mt30">
+                <div class="row">
+                  <div class="col-xl-12">
+                    <div class="my_profile_setting_input">
+                      <button type="button" class="btn btn1 float-left" (click)="onCancel()">Cancel</button>
+                      <button type="submit" class="btn btn2 float-right">Submit</button>
+                    </div>
+                  </div>
+                </div>
+              </div>
 
-      <!-- Attachment URL Input -->
-      <div class="row">
-        <div class="col-lg-12">
-          <div class="my_profile_setting_input form-group">
-            <label>Attachment URL</label>
-            <input type="text" class="form-control" [formControlName]="i" *ngFor="let attachment of attachmentControls; let i = index" />
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- Virtual Tour Section -->
-    <div class="col-lg-12" formGroupName="virtualTour">
-      <h4 class="mb30">Virtual Tour</h4>
-      <div class="row">
-        <div class="col-lg-6 col-xl-6">
-          <div class="my_profile_setting_input form-group">
-            <label for="virtualTourUrl">Virtual Tour URL</label>
-            <input type="text" class="form-control" id="virtualTourUrl" formControlName="url" />
-          </div>
-        </div>
-        <div class="col-lg-6 col-xl-6">
-          <div class="my_profile_setting_input form-group">
-            <label for="virtualTourProvider">Provider</label>
-            <input type="text" class="form-control" id="virtualTourProvider" formControlName="provider" />
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- Cancel and Submit Buttons -->
-    <div class="col-xl-12">
-      <div class="my_profile_setting_input">
-        <button type="button" class="btn btn1 float-left" (click)="onCancel()">Cancel</button>
-        <button type="submit" class="btn btn2 float-right">Submit</button>
-      </div>
-    </div>
-  </div>
-</div>
             </form>
           </div>
         </div>

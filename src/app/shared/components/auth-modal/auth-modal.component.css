@@ -1,0 +1,43 @@
+.sign_up_modal {
+    background-color: rgba(0, 0, 0, 0.6);
+}
+
+.modal-header {
+    border-bottom: none;
+    padding: 1rem;
+}
+
+.modal-header .close {
+    font-size: 2rem;
+    padding: 1rem;
+    margin: -1rem;
+}
+
+.sign_up_tab {
+    margin-bottom: 1.5rem;
+}
+
+.heading {
+    margin-bottom: 1.5rem;
+}
+
+.form-group {
+    margin-bottom: 1rem;
+}
+
+.btn-fpswd {
+    color: #007bff;
+    cursor: pointer;
+}
+
+.btn-fpswd:hover {
+    text-decoration: underline;
+}
+
+.btn-log {
+    margin-top: 1rem;
+}
+
+.invalid-feedback {
+    display: block;
+} 

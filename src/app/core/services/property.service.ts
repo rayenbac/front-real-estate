@@ -10,6 +10,11 @@ import { environment } from '../../../environments/environment';
 export class PropertyService {
   private apiUrl = `${environment.apiBaseUrl}/properties`; // Replace with your API base URL
 
+  // Add getter for apiUrl
+  public getApiUrl(): string {
+    return this.apiUrl;
+  }
+
   constructor(private http: HttpClient) {}
 
   // Get all properties

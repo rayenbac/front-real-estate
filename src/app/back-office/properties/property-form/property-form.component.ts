@@ -24,7 +24,7 @@ export class PropertyFormComponent implements OnInit {
   propertyForm: FormGroup;
   isEditMode = false;
   propertyId: string | null = null;
-  uploadedImages: { url: string; name: string; file?: File }[] = [];
+  uploadedImages: { url: string; name: string; file?: File; isExisting: boolean }[] = [];
   selectedFiles: File[] = [];
   featuresList: PropertyFeature[] = []; // Changed to PropertyFeature[]
 
@@ -271,57 +271,65 @@ export class PropertyFormComponent implements OnInit {
     const files = event.target.files;
     if (!files || files.length === 0) return;
     
-    this.selectedFiles = Array.from(files);
+    // Convert FileList to Array and store new files
+    const newFiles = Array.from(files) as File[];
+    this.selectedFiles = [...this.selectedFiles, ...newFiles];
     
-    // Clear existing media array
+    // Get the current media array
     const mediaArray = this.propertyForm.get('media') as FormArray;
-    while (mediaArray.length) {
-      mediaArray.removeAt(0);
-    }
     
-    // Add new media items to the form array
-    this.selectedFiles.forEach((file, index) => {
-      mediaArray.push(this.fb.group({
-        type: ['image'],
-        url: [''], // Will be set by the server
-        thumbnail: [file.name], // Using filename as thumbnail for now
-        title: [file.name], // Using filename as title
-        description: ['Property image'], // Default description
-        isPrimary: [index === 0], // First image is primary
-        order: [index + 1] // Order starting from 1
-      }));
-    });
-    
-    // Update UI preview
-    this.uploadedImages = [];
-    for (let file of this.selectedFiles) {
+    // Process new files and add them to uploadedImages and media array
+    newFiles.forEach((file: File) => {
       const reader = new FileReader();
       reader.onload = (e: any) => {
+        // Add to uploadedImages for preview
         this.uploadedImages.push({ 
           url: e.target.result, 
           name: file.name,
-          file: file 
+          file: file,
+          isExisting: false
         });
+        
+        // Add to media form array
+        mediaArray.push(this.fb.group({
+          type: ['image'],
+          url: [''], // Will be set by server
+          thumbnail: [file.name],
+          title: [file.name],
+          description: ['Property image'],
+          isPrimary: [mediaArray.length === 0], // First image is primary
+          order: [mediaArray.length + 1]
+        }));
       };
       reader.readAsDataURL(file);
-    }
+    });
   }
 
   deleteImage(index: number) {
-    this.uploadedImages.splice(index, 1);
-    this.selectedFiles = this.selectedFiles.filter((_, i) => i !== index);
+    const deletedImage = this.uploadedImages[index];
     
-    // Also remove from the media form array
+    // Remove from uploadedImages array
+    this.uploadedImages.splice(index, 1);
+    
+    // If it's a new image (has file property), remove from selectedFiles
+    if (!deletedImage.isExisting) {
+      this.selectedFiles = this.selectedFiles.filter(file => 
+        file.name !== deletedImage.file?.name
+      );
+    }
+    
+    // Remove from media form array
     const mediaArray = this.propertyForm.get('media') as FormArray;
     if (mediaArray.length > index) {
       mediaArray.removeAt(index);
       
-      // Update order for remaining media items
-      for (let i = 0; i < mediaArray.length; i++) {
-        const control = mediaArray.at(i);
-        control.get('order')?.setValue(i + 1);
-        control.get('isPrimary')?.setValue(i === 0); // First image is primary
-      }
+      // Update order and isPrimary for remaining items
+      mediaArray.controls.forEach((control, i) => {
+        control.patchValue({
+          order: i + 1,
+          isPrimary: i === 0
+        });
+      });
     }
   }
 
@@ -341,16 +349,13 @@ export class PropertyFormComponent implements OnInit {
           
           // Handle features array
           if (property.features && Array.isArray(property.features)) {
-            // Now this works because featuresList is PropertyFeature[]
             this.featuresList = [...property.features];
             
-            // Clear and repopulate features form array
             const featuresArray = this.propertyForm.get('features') as FormArray;
             while (featuresArray.length) {
               featuresArray.removeAt(0);
             }
             
-            // Add each feature as a form group
             this.featuresList.forEach(feature => {
               featuresArray.push(this.fb.group({
                 name: [feature.name, Validators.required],
@@ -359,7 +364,6 @@ export class PropertyFormComponent implements OnInit {
               }));
             });
             
-            // Update UI
             setTimeout(() => {
               this.updateFeaturesTags();
             });
@@ -367,14 +371,13 @@ export class PropertyFormComponent implements OnInit {
           
           // Handle media array
           if (property.media && Array.isArray(property.media)) {
-            // Clear and repopulate media form array
             const mediaArray = this.propertyForm.get('media') as FormArray;
             while (mediaArray.length) {
               mediaArray.removeAt(0);
             }
             
-            // Add each media item as a form group
-            property.media.forEach(media => {
+            // Add each media item as a form group and update UI preview
+            property.media.forEach((media, index) => {
               mediaArray.push(this.fb.group({
                 type: [media.type || 'image'],
                 url: [media.url],
@@ -382,14 +385,15 @@ export class PropertyFormComponent implements OnInit {
                 title: [media.title || ''],
                 description: [media.description || ''],
                 isPrimary: [media.isPrimary || false],
-                order: [media.order || 0]
+                order: [media.order || index + 1]
               }));
               
-              // Also update the UI preview
+              // Update the UI preview with existing images
               if (media.url) {
                 this.uploadedImages.push({
                   url: media.url,
-                  name: media.title || 'Image'
+                  name: media.title || `Image ${index + 1}`,
+                  isExisting: true // Flag to identify existing images
                 });
               }
             });
@@ -533,37 +537,40 @@ export class PropertyFormComponent implements OnInit {
         });
       }
       
-      // Fix for media validation issue - create media objects for each file
-      // The backend validation requires the media field even though it will be populated by the server
-      if (this.selectedFiles && this.selectedFiles.length > 0) {
-        // Add image files
+      // Handle existing and new images
+      if (this.isEditMode) {
+        // Add existing images to formData
+        this.uploadedImages.forEach((image, index) => {
+          if (image.isExisting) {
+            formData.append(`media[${index}][type]`, 'image');
+            formData.append(`media[${index}][url]`, image.url);
+            formData.append(`media[${index}][title]`, image.name);
+            formData.append(`media[${index}][description]`, 'Property image');
+            formData.append(`media[${index}][isPrimary]`, (index === 0).toString());
+            formData.append(`media[${index}][order]`, (index + 1).toString());
+          }
+        });
+        
+        // Add new images
+        let existingImagesCount = this.uploadedImages.filter(img => img.isExisting).length;
         this.selectedFiles.forEach((file, index) => {
           formData.append('images', file, file.name);
-          
-          // Create a corresponding media entry for each file
+          formData.append(`media[${index + existingImagesCount}][type]`, 'image');
+          formData.append(`media[${index + existingImagesCount}][title]`, file.name);
+          formData.append(`media[${index + existingImagesCount}][description]`, 'Property image');
+          formData.append(`media[${index + existingImagesCount}][isPrimary]`, (index + existingImagesCount === 0).toString());
+          formData.append(`media[${index + existingImagesCount}][order]`, (index + existingImagesCount + 1).toString());
+        });
+      } else {
+        // Handle new property creation (existing code)
+        this.selectedFiles.forEach((file, index) => {
+          formData.append('images', file, file.name);
           formData.append(`media[${index}][type]`, 'image');
-          formData.append(`media[${index}][url]`, 'placeholder'); // Will be replaced by server
-          formData.append(`media[${index}][thumbnail]`, 'placeholder'); // Will be replaced by server
           formData.append(`media[${index}][title]`, file.name);
           formData.append(`media[${index}][description]`, 'Property image');
           formData.append(`media[${index}][isPrimary]`, (index === 0).toString());
           formData.append(`media[${index}][order]`, (index + 1).toString());
         });
-      } else if (this.isEditMode && this.uploadedImages && this.uploadedImages.length > 0) {
-        // For edit mode, include existing media information if no new files
-        this.uploadedImages.forEach((image, index) => {
-          formData.append(`media[${index}][type]`, 'image');
-          formData.append(`media[${index}][url]`, image.url);
-          formData.append(`media[${index}][thumbnail]`, image.url);
-          formData.append(`media[${index}][title]`, image.name);
-          formData.append(`media[${index}][description]`, 'Property image');
-          formData.append(`media[${index}][isPrimary]`, (index === 0).toString());
-          formData.append(`media[${index}][order]`, (index + 1).toString());
-        });
-      } else {
-        // If no media at all, which will fail validation
-        this.showErrorAlert('At least one image is required');
-        return;
       }
       
       console.log('Form Data created with files:', this.selectedFiles.length);

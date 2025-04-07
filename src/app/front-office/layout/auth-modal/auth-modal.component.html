@@ -1,0 +1,90 @@
+<div class="modal fade" id="authModal" tabindex="-1" role="dialog" aria-labelledby="authModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="authModalLabel">
+          {{ isLoginMode ? 'Login' : 'Register' }}
+        </h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <!-- Social Login Buttons -->
+        <div class="social-login mb-4">
+          <button class="btn btn-google" (click)="onGoogleLogin()">
+            <i class="fab fa-google"></i> Continue with Google
+          </button>
+          <button class="btn btn-facebook" (click)="onFacebookLogin()">
+            <i class="fab fa-facebook-f"></i> Continue with Facebook
+          </button>
+        </div>
+
+        <div class="divider">
+          <span>or</span>
+        </div>
+
+        <!-- Login Form -->
+        <form *ngIf="isLoginMode" [formGroup]="loginForm" (ngSubmit)="onLogin()">
+          <div class="form-group">
+            <label for="loginEmail">Email</label>
+            <input type="email" class="form-control" id="loginEmail" formControlName="email">
+            <div class="text-danger" *ngIf="loginForm.get('email')?.invalid && loginForm.get('email')?.touched">
+              Please enter a valid email
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="loginPassword">Password</label>
+            <input type="password" class="form-control" id="loginPassword" formControlName="password">
+            <div class="text-danger" *ngIf="loginForm.get('password')?.invalid && loginForm.get('password')?.touched">
+              Password is required and must be at least 6 characters
+            </div>
+          </div>
+          <button type="submit" class="btn btn-primary btn-block" [disabled]="loginForm.invalid">
+            Login
+          </button>
+        </form>
+
+        <!-- Register Form -->
+        <form *ngIf="!isLoginMode" [formGroup]="registerForm" (ngSubmit)="onRegister()">
+          <div class="form-group">
+            <label for="registerName">Name</label>
+            <input type="text" class="form-control" id="registerName" formControlName="name">
+            <div class="text-danger" *ngIf="registerForm.get('name')?.invalid && registerForm.get('name')?.touched">
+              Name is required
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="registerEmail">Email</label>
+            <input type="email" class="form-control" id="registerEmail" formControlName="email">
+            <div class="text-danger" *ngIf="registerForm.get('email')?.invalid && registerForm.get('email')?.touched">
+              Please enter a valid email
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="registerPassword">Password</label>
+            <input type="password" class="form-control" id="registerPassword" formControlName="password">
+            <div class="text-danger" *ngIf="registerForm.get('password')?.invalid && registerForm.get('password')?.touched">
+              Password is required and must be at least 6 characters
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="confirmPassword">Confirm Password</label>
+            <input type="password" class="form-control" id="confirmPassword" formControlName="confirmPassword">
+            <div class="text-danger" *ngIf="registerForm.get('confirmPassword')?.invalid && registerForm.get('confirmPassword')?.touched">
+              Passwords must match
+            </div>
+          </div>
+          <button type="submit" class="btn btn-primary btn-block" [disabled]="registerForm.invalid">
+            Register
+          </button>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-link" (click)="toggleMode()">
+          {{ isLoginMode ? 'Need an account? Register' : 'Already have an account? Login' }}
+        </button>
+      </div>
+    </div>
+  </div>
+</div> 
