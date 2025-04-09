@@ -12,6 +12,13 @@ interface PropertyFeature {
   icon?: string;
 }
 
+interface PropertyAmenity {
+  category: string;
+  name: string;
+  description?: string;
+  icon?: string;
+}
+
 @Component({
   selector: 'app-property-form',
   standalone: true,
@@ -27,6 +34,8 @@ export class PropertyFormComponent implements OnInit {
   uploadedImages: { url: string; name: string; file?: File; isExisting: boolean }[] = [];
   selectedFiles: File[] = [];
   featuresList: PropertyFeature[] = []; // Changed to PropertyFeature[]
+  amenitiesList: PropertyAmenity[] = []; // Added amenities list
+  originalMedia: any[] = []; // Store original media data
 
   constructor(
     private fb: FormBuilder,
@@ -88,7 +97,7 @@ export class PropertyFormComponent implements OnInit {
       features: this.fb.array([]), // This will hold our features
     
       // Media & Attachments
-      media: this.fb.array([], Validators.required),
+      media: this.fb.array([]),
       attachments: this.fb.array([]),
     
       virtualTour: this.fb.group({
@@ -229,6 +238,48 @@ export class PropertyFormComponent implements OnInit {
     }
   }
 
+  // Add amenity to the form
+  addAmenity(category: string, name: string, description: string = '', icon: string = ''): void {
+    const amenity: PropertyAmenity = {
+      category,
+      name,
+      description,
+      icon
+    };
+    
+    this.amenitiesList.push(amenity);
+    
+    const amenitiesArray = this.propertyForm.get('amenities') as FormArray;
+    amenitiesArray.push(this.fb.group({
+      category: [amenity.category],
+      name: [amenity.name],
+      description: [amenity.description],
+      icon: [amenity.icon]
+    }));
+  }
+
+  // Toggle amenity selection
+  toggleAmenity(event: Event, category: string, name: string): void {
+    const checkbox = event.target as HTMLInputElement;
+    
+    if (checkbox.checked) {
+      this.addAmenity(category, name);
+    } else {
+      // Find and remove the amenity
+      const index = this.amenitiesList.findIndex(a => a.category === category && a.name === name);
+      if (index !== -1) {
+        this.amenitiesList.splice(index, 1);
+        const amenitiesArray = this.propertyForm.get('amenities') as FormArray;
+        amenitiesArray.removeAt(index);
+      }
+    }
+  }
+
+  // Check if an amenity is selected
+  isAmenitySelected(category: string, name: string): boolean {
+    return this.amenitiesList.some(a => a.category === category && a.name === name);
+  }
+
   get mediaControls() {
     return (this.propertyForm.get('media') as FormArray).controls;
   }
@@ -345,6 +396,17 @@ export class PropertyFormComponent implements OnInit {
     if (this.propertyId) {
       this.propertyService.getProperty(this.propertyId).subscribe(
         (property) => {
+          console.log('Loaded property data:', property);
+          
+          // Clear existing form arrays
+          this.clearFormArrays();
+          
+          // Store original media for comparison later
+          if (property.media && Array.isArray(property.media)) {
+            this.originalMedia = [...property.media];
+          }
+          
+          // Patch basic form values
           this.propertyForm.patchValue(property);
           
           // Handle features array
@@ -352,11 +414,7 @@ export class PropertyFormComponent implements OnInit {
             this.featuresList = [...property.features];
             
             const featuresArray = this.propertyForm.get('features') as FormArray;
-            while (featuresArray.length) {
-              featuresArray.removeAt(0);
-            }
-            
-            this.featuresList.forEach(feature => {
+            property.features.forEach(feature => {
               featuresArray.push(this.fb.group({
                 name: [feature.name, Validators.required],
                 value: [feature.value],
@@ -369,12 +427,24 @@ export class PropertyFormComponent implements OnInit {
             });
           }
           
+          // Handle amenities array
+          if (property.amenities && Array.isArray(property.amenities)) {
+            this.amenitiesList = [...property.amenities];
+            
+            const amenitiesArray = this.propertyForm.get('amenities') as FormArray;
+            property.amenities.forEach(amenity => {
+              amenitiesArray.push(this.fb.group({
+                category: [amenity.category],
+                name: [amenity.name],
+                description: [amenity.description || ''],
+                icon: [amenity.icon || '']
+              }));
+            });
+          }
+          
           // Handle media array
           if (property.media && Array.isArray(property.media)) {
             const mediaArray = this.propertyForm.get('media') as FormArray;
-            while (mediaArray.length) {
-              mediaArray.removeAt(0);
-            }
             
             // Add each media item as a form group and update UI preview
             property.media.forEach((media, index) => {
@@ -391,11 +461,19 @@ export class PropertyFormComponent implements OnInit {
               // Update the UI preview with existing images
               if (media.url) {
                 this.uploadedImages.push({
-                  url: media.url,
+                  url: 'http://localhost:3000' + media.url,
                   name: media.title || `Image ${index + 1}`,
-                  isExisting: true // Flag to identify existing images
+                  isExisting: true
                 });
               }
+            });
+          }
+
+          // Handle attachments array if needed
+          if (property.attachments && Array.isArray(property.attachments)) {
+            const attachmentsArray = this.propertyForm.get('attachments') as FormArray;
+            property.attachments.forEach(attachment => {
+              attachmentsArray.push(this.fb.control(attachment.url || ''));
             });
           }
         },
@@ -405,6 +483,34 @@ export class PropertyFormComponent implements OnInit {
         } 
       );
     } 
+  }
+
+  clearFormArrays(): void {
+    const featuresArray = this.propertyForm.get('features') as FormArray;
+    const amenitiesArray = this.propertyForm.get('amenities') as FormArray;
+    const mediaArray = this.propertyForm.get('media') as FormArray;
+    const attachmentsArray = this.propertyForm.get('attachments') as FormArray;
+    
+    while (featuresArray.length) {
+      featuresArray.removeAt(0);
+    }
+    
+    while (amenitiesArray.length) {
+      amenitiesArray.removeAt(0);
+    }
+    
+    while (mediaArray.length) {
+      mediaArray.removeAt(0);
+    }
+    
+    while (attachmentsArray.length) {
+      attachmentsArray.removeAt(0);
+    }
+    
+    this.featuresList = [];
+    this.amenitiesList = [];
+    this.uploadedImages = [];
+    this.selectedFiles = [];
   }
 
   onSubmit(): void {
@@ -540,19 +646,18 @@ export class PropertyFormComponent implements OnInit {
       // Handle existing and new images
       if (this.isEditMode) {
         // Add existing images to formData
-        this.uploadedImages.forEach((image, index) => {
-          if (image.isExisting) {
-            formData.append(`media[${index}][type]`, 'image');
-            formData.append(`media[${index}][url]`, image.url);
-            formData.append(`media[${index}][title]`, image.name);
-            formData.append(`media[${index}][description]`, 'Property image');
-            formData.append(`media[${index}][isPrimary]`, (index === 0).toString());
-            formData.append(`media[${index}][order]`, (index + 1).toString());
-          }
+        const existingImages = this.uploadedImages.filter(img => img.isExisting);
+        existingImages.forEach((image, index) => {
+          formData.append(`media[${index}][type]`, 'image');
+          formData.append(`media[${index}][url]`, image.url.replace('http://localhost:3000', ''));
+          formData.append(`media[${index}][title]`, image.name);
+          formData.append(`media[${index}][description]`, 'Property image');
+          formData.append(`media[${index}][isPrimary]`, (index === 0).toString());
+          formData.append(`media[${index}][order]`, (index + 1).toString());
         });
         
         // Add new images
-        let existingImagesCount = this.uploadedImages.filter(img => img.isExisting).length;
+        let existingImagesCount = existingImages.length;
         this.selectedFiles.forEach((file, index) => {
           formData.append('images', file, file.name);
           formData.append(`media[${index + existingImagesCount}][type]`, 'image');
@@ -561,6 +666,12 @@ export class PropertyFormComponent implements OnInit {
           formData.append(`media[${index + existingImagesCount}][isPrimary]`, (index + existingImagesCount === 0).toString());
           formData.append(`media[${index + existingImagesCount}][order]`, (index + existingImagesCount + 1).toString());
         });
+
+        // If no new images were added and no existing images were deleted, preserve original media
+        if (this.selectedFiles.length === 0 && this.uploadedImages.length === 0) {
+          // Add a flag to indicate we should keep existing media
+          formData.append('preserveExistingMedia', 'true');
+        }
       } else {
         // Handle new property creation (existing code)
         this.selectedFiles.forEach((file, index) => {

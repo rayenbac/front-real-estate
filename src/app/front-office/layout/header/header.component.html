@@ -1,122 +1,124 @@
-<header class="header-nav menu_style_home_one navbar-scrolltofixed stricky main-menu">
-    <div class="container-fluid p0">
-      <nav>
-        <div class="menu-toggle">
-          <img class="nav_logo_img img-fluid" src="assets/images/header-logo.png" alt="header-logo.png">
-          <button type="button" id="menu-btn">
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-          </button>
-        </div>
-        <a href="#" class="navbar_brand float-left dn-smd">
-          <img class="logo1 img-fluid" src="assets/images/header-logo.png" alt="header-logo.png">
-          <img class="logo2 img-fluid" src="assets/images/header-logo2.png" alt="header-logo2.png">
-        </a>
-        <ul id="respMenu" class="ace-responsive-menu text-right" data-menu-style="horizontal">
-          <li>
-            <a href="#"><span class="title">Home</span></a>
-            <ul>
-              <li><a href="index.html">Home 1</a></li>
-              <li><a href="index2.html">Home 2</a></li>
-              <li><a href="index3.html">Home 3</a></li>
-              <li><a href="index4.html">Home 4</a></li>
-              <li><a href="index5.html">Home 5</a></li>
-              <li><a href="index6.html">Home 6</a></li>
-              <li><a href="index7.html">Home 7</a></li>
-              <li><a href="index8.html">Home 8</a></li>
-              <li><a href="index9.html">Home 9</a></li>
-              <li><a href="index10.html">Home 10</a></li>
-            </ul>
-          </li>
-          <li>
-            <a href="#"><span class="title">Listing</span></a>
-            <ul>
-              <li>
-                <a href="#">Listing Grid</a>
-                <ul>
-                  <li><a href="page-listing-grid-v1.html">Grid v1</a></li>
-                  <li WAI-ARIA><a href="page-listing-grid-v2.html">Grid v2</a></li>
-                  <li><a href="page-listing-grid-v3.html">Grid v3</a></li>
-                  <li><a href="page-listing-grid-v4.html">Grid v4</a></li>
-                  <li><a href="page-listing-grid-v5.html">Grid v5</a></li>
-                  <li><a href="page-listing-full-width-grid.html">Grid Fullwidth</a></li>
-                </ul>
-              </li>
-              <li>
-                <a href="#">Listing List</a>
-                <ul>
-                  <li><a href="page-listing-list.html">List V1</a></li>
-                </ul>
-              </li>
-              <li>
-                <a href="#">Listing Style</a>
-                <ul>
-                  <li><a href="page-listing-parallax.html">Parallax Style</a></li>
-                  <li><a href="page-listing-slider.html">Slider Style</a></li>
-                  <li><a href="page-listing-map.html">Map Header</a></li>
-                </ul>
-              </li>
-              <li>
-                <a href="#">Listing Half</a>
-                <ul>
-                  <li><a href="page-listing-half-map-v1.html">Map V1</a></li>
-                  <li><a href="page-listing-half-map-v2.html">Map V2</a></li>
-                  <li><a href="page-listing-half-map-v3.html">Map V3</a></li>
-                  <li><a href="page-listing-half-map-v4.html">Map V4</a></li>
-                </ul>
-              </li>
-              <li>
-                <a href="#">Agent View</a>
-                <ul>
-                  <li><a href="page-listing-agent-v1.html">Agent V1</a></li>
-                  <li><a href="page-listing-agent-v2.html">Agent V2</a></li>
-                  <li><a href="page-listing-agent-v3.html">Agent Details</a></li>
-                </ul>
-              </li>
-              <li>
-                <a href="#">Agencies View</a>
-                <ul>
-                  <li><a href="page-listing-agencies-v1.html">Agencies V1</a></li>
-                  <li><a href="page-listing-agencies-v2.html">Agencies V2</a></li>
-                  <li><a href="page-listing-agencies-v3.html">Agencies Details</a></li>
-                </ul>
-              </li>
-              <li><a href="page-add-new-property.html">Create Listing</a></li>
-            </ul>
-          </li>
-          <li>
-            <a href="#"><span class="title">Pages</span></a>
-            <ul>
-              <li><a href="page-about.html">About Us</a></li>
-              <li><a href="page-gallery.html">Gallery</a></li>
-              <li><a href="page-faq.html">Faq</a></li>
-              <li><a href="page-login.html">LogIn</a></li>
-              <li><a href="page-register.html">Register</a></li>
-              <li><a href="page-service.html">Service</a></li>
-              <li><a href="page-error.html">404 Page</a></li>
-              <li><a href="page-terms.html">Terms and Conditions</a></li>
-            </ul>
-          </li>
-          <li class="list-inline-item list_s">
-            <a
-              href="javascript:void(0)"
-              class="btn flaticon-user"
-              #loginTrigger
-              (click)="openAuthModal($event)"
-            >
-              <span class="dn-lg">Login/Register</span>
-            </a>
-          </li>
-          <li class="list-inline-item add_listing">
-            <a href="page-add-new-property.html">
-              <span class="flaticon-plus"></span><span class="dn-lg"> Create Listing</span>
-            </a>
-          </li>
-        </ul>
-      </nav>
-    </div>
-  </header>
-  
-  <!-- Auth Modal -->
-  <app-auth-modal #authModal (close)="onModalClose()"></app-auth-modal>
+<header class="header-nav menu_style_home_one style2 navbar-scrolltofixed stricky main-menu">
+  <div class="container-fluid p0">
+    <nav>
+      <div class="menu-toggle">
+        <img class="nav_logo_img img-fluid" src="assets/images/header-logo.png" alt="header-logo.png">
+        <button type="button" id="menu-btn">
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+      </div>
+      <a href="#" class="navbar_brand float-left dn-smd">
+        <img class="logo1 img-fluid" src="assets/images/header-logo.png" alt="header-logo.png">
+        <img class="logo2 img-fluid" src="assets/images/header-logo2.png" alt="header-logo2.png">
+      </a>
+      <ul id="respMenu" class="ace-responsive-menu text-right" data-menu-style="horizontal">
+        <li>
+          <a href="#"><span class="title">Home</span></a>
+          <ul>
+            <li><a href="index.html">Home 1</a></li>
+            <li><a href="index2.html">Home 2</a></li>
+            <li><a href="index3.html">Home 3</a></li>
+            <li><a href="index4.html">Home 4</a></li>
+            <li><a href="index5.html">Home 5</a></li>
+            <li><a href="index6.html">Home 6</a></li>
+            <li><a href="index7.html">Home 7</a></li>
+            <li><a href="index8.html">Home 8</a></li>
+            <li><a href="index9.html">Home 9</a></li>
+            <li><a href="index10.html">Home 10</a></li>
+          </ul>
+        </li>
+        <li>
+          <a href="#"><span class="title">Listing</span></a>
+          <ul>
+            <li>
+              <a href="#">Listing Grid</a>
+              <ul>
+                <li><a href="page-listing-grid-v1.html">Grid v1</a></li>
+                <li><a href="page-listing-grid-v2.html">Grid v2</a></li>
+                <li><a href="page-listing-grid-v3.html">Grid v3</a></li>
+                <li><a href="page-listing-grid-v4.html">Grid v4</a></li>
+                <li><a href="page-listing-grid-v5.html">Grid v5</a></li>
+                <li><a href="page-listing-full-width-grid.html">Grid Fullwidth</a></li>
+              </ul>
+            </li>
+            <li>
+              <a href="#">Listing List</a>
+              <ul>
+                <li><a href="page-listing-list.html">List V1</a></li>
+              </ul>
+            </li>
+            <li>
+              <a href="#">Listing Style</a>
+              <ul>
+                <li><a href="page-listing-parallax.html">Parallax Style</a></li>
+                <li><a href="page-listing-slider.html">Slider Style</a></li>
+                <li><a href="page-listing-map.html">Map Header</a></li>
+              </ul>
+            </li>
+            <li>
+              <a href="#">Listing Half</a>
+              <ul>
+                <li><a href="page-listing-half-map-v1.html">Map V1</a></li>
+                <li><a href="page-listing-half-map-v2.html">Map V2</a></li>
+                <li><a href="page-listing-half-map-v3.html">Map V3</a></li>
+                <li><a href="page-listing-half-map-v4.html">Map V4</a></li>
+              </ul>
+            </li>
+            <li>
+              <a href="#">Agent View</a>
+              <ul>
+                <li><a href="page-listing-agent-v1.html">Agent V1</a></li>
+                <li><a href="page-listing-agent-v2.html">Agent V2</a></li>
+                <li><a href="page-listing-agent-v3.html">Agent Details</a></li>
+              </ul>
+            </li>
+            <li>
+              <a href="#">Agencies View</a>
+              <ul>
+                <li><a href="page-listing-agencies-v1.html">Agencies V1</a></li>
+                <li><a href="page-listing-agencies-v2.html">Agencies V2</a></li>
+                <li><a href="page-listing-agencies-v3.html">Agencies Details</a></li>
+              </ul>
+            </li>
+            <li><a href="page-add-new-property.html">Create Listing</a></li>
+          </ul>
+        </li>
+        <li>
+          <a href="#"><span class="title">Pages</span></a>
+          <ul>
+            <li><a href="page-about.html">About Us</a></li>
+            <li><a href="page-gallery.html">Gallery</a></li>
+            <li><a href="page-faq.html">Faq</a></li>
+            <li><a href="page-login.html">LogIn</a></li>
+            <li><a href="page-register.html">Register</a></li>
+            <li><a href="page-service.html">Service</a></li>
+            <li><a href="page-error.html">404 Page</a></li>
+            <li><a href="page-terms.html">Terms and Conditions</a></li>
+          </ul>
+        </li>
+        
+        <!-- Auth Buttons -->
+        <li class="list-inline-item list_s" *ngIf="!isLoggedIn">
+          <a href="javascript:void(0)" class="btn flaticon-user" (click)="openAuthModal($event)">
+            <span class="dn-lg">Login/Register</span>
+          </a>
+        </li>
+        <li class="list-inline-item list_s" *ngIf="isLoggedIn">
+          <a href="javascript:void(0)" class="btn flaticon-logout" (click)="onLogout($event)">
+            <span class="dn-lg">Logout</span>
+          </a>
+        </li>
+        <li class="list-inline-item add_listing">
+          <a href="page-add-new-property.html">
+            <span class="flaticon-plus"></span><span class="dn-lg"> Create Listing</span>
+          </a>
+        </li>
+      </ul>
+    </nav>
+  </div>
+</header>
+
+<!-- Auth Modal Component -->
+<app-auth-modal #authModal></app-auth-modal>

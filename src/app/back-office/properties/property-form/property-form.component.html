@@ -6,7 +6,7 @@
         <div class="row">
           <div class="col-lg-12 mb10">
             <div class="breadcrumb_content style2">
-              <h2 class="breadcrumb_title">Add New Property</h2>
+              <h2 class="breadcrumb_title">{{ isEditMode ? 'Edit Property' : 'Add New Property' }}</h2>
               <p>We are glad to see you again!</p>
             </div>
           </div>
@@ -136,31 +136,41 @@
                         <ul class="ui_kit_checkbox selectable-list">
                           <li>
                             <div class="custom-control custom-checkbox">
-                              <input type="checkbox" class="custom-control-input" id="customCheck1">
+                              <input type="checkbox" class="custom-control-input" id="customCheck1"
+                                [checked]="isAmenitySelected('indoor', 'Air Conditioning')"
+                                (change)="toggleAmenity($event, 'indoor', 'Air Conditioning')">
                               <label class="custom-control-label" for="customCheck1">Air Conditioning</label>
                             </div>
                           </li>
                           <li>
                             <div class="custom-control custom-checkbox">
-                              <input type="checkbox" class="custom-control-input" id="customCheck2">
+                              <input type="checkbox" class="custom-control-input" id="customCheck2"
+                                [checked]="isAmenitySelected('outdoor', 'Lawn')"
+                                (change)="toggleAmenity($event, 'outdoor', 'Lawn')">
                               <label class="custom-control-label" for="customCheck2">Lawn</label>
                             </div>
                           </li>
                           <li>
                             <div class="custom-control custom-checkbox">
-                              <input type="checkbox" class="custom-control-input" id="customCheck3">
+                              <input type="checkbox" class="custom-control-input" id="customCheck3"
+                                [checked]="isAmenitySelected('outdoor', 'Swimming Pool')"
+                                (change)="toggleAmenity($event, 'outdoor', 'Swimming Pool')">
                               <label class="custom-control-label" for="customCheck3">Swimming Pool</label>
                             </div>
                           </li>
                           <li>
                             <div class="custom-control custom-checkbox">
-                              <input type="checkbox" class="custom-control-input" id="customCheck4">
+                              <input type="checkbox" class="custom-control-input" id="customCheck4"
+                                [checked]="isAmenitySelected('outdoor', 'Barbeque')"
+                                (change)="toggleAmenity($event, 'outdoor', 'Barbeque')">
                               <label class="custom-control-label" for="customCheck4">Barbeque</label>
                             </div>
                           </li>
                           <li>
                             <div class="custom-control custom-checkbox">
-                              <input type="checkbox" class="custom-control-input" id="customCheck5">
+                              <input type="checkbox" class="custom-control-input" id="customCheck5"
+                                [checked]="isAmenitySelected('indoor', 'Microwave')"
+                                (change)="toggleAmenity($event, 'indoor', 'Microwave')">
                               <label class="custom-control-label" for="customCheck5">Microwave</label>
                             </div>
                           </li>
@@ -170,31 +180,41 @@
                         <ul class="ui_kit_checkbox selectable-list">
                           <li>
                             <div class="custom-control custom-checkbox">
-                              <input type="checkbox" class="custom-control-input" id="customCheck6">
+                              <input type="checkbox" class="custom-control-input" id="customCheck6"
+                                [checked]="isAmenitySelected('indoor', 'TV Cable')"
+                                (change)="toggleAmenity($event, 'indoor', 'TV Cable')">
                               <label class="custom-control-label" for="customCheck6">TV Cable</label>
                             </div>
                           </li>
                           <li>
                             <div class="custom-control custom-checkbox">
-                              <input type="checkbox" class="custom-control-input" id="customCheck7">
+                              <input type="checkbox" class="custom-control-input" id="customCheck7"
+                                [checked]="isAmenitySelected('indoor', 'Dryer')"
+                                (change)="toggleAmenity($event, 'indoor', 'Dryer')">
                               <label class="custom-control-label" for="customCheck7">Dryer</label>
                             </div>
                           </li>
                           <li>
                             <div class="custom-control custom-checkbox">
-                              <input type="checkbox" class="custom-control-input" id="customCheck8">
+                              <input type="checkbox" class="custom-control-input" id="customCheck8"
+                                [checked]="isAmenitySelected('outdoor', 'Outdoor Shower')"
+                                (change)="toggleAmenity($event, 'outdoor', 'Outdoor Shower')">
                               <label class="custom-control-label" for="customCheck8">Outdoor Shower</label>
                             </div>
                           </li>
                           <li>
                             <div class="custom-control custom-checkbox">
-                              <input type="checkbox" class="custom-control-input" id="customCheck9">
+                              <input type="checkbox" class="custom-control-input" id="customCheck9"
+                                [checked]="isAmenitySelected('indoor', 'Washer')"
+                                (change)="toggleAmenity($event, 'indoor', 'Washer')">
                               <label class="custom-control-label" for="customCheck9">Washer</label>
                             </div>
                           </li>
                           <li>
                             <div class="custom-control custom-checkbox">
-                              <input type="checkbox" class="custom-control-input" id="customCheck10">
+                              <input type="checkbox" class="custom-control-input" id="customCheck10"
+                                [checked]="isAmenitySelected('community', 'Gym')"
+                                (change)="toggleAmenity($event, 'community', 'Gym')">
                               <label class="custom-control-label" for="customCheck10">Gym</label>
                             </div>
                           </li>

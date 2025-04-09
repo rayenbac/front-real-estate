@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { BehaviorSubject, Observable } from 'rxjs';
-import { tap } from 'rxjs/operators';
+import { BehaviorSubject, Observable, of } from 'rxjs';
+import { tap, map } from 'rxjs/operators';
 import { environment } from '../../../environments/environment';
 
 interface AuthResponse {
@@ -10,10 +10,10 @@ interface AuthResponse {
 }
 
 export interface RegisterData {
-  email: string;
-  password: string;
   firstName: string;
   lastName: string;
+  email: string;
+  password: string;
   phone?: string;
 }
 
@@ -24,31 +24,48 @@ export class AuthService {
   private apiUrl = `${environment.apiBaseUrl}/auth`;
   private currentUserSubject = new BehaviorSubject<any>(null);
   public currentUser$ = this.currentUserSubject.asObservable();
-  private isLoggedInSubject = new BehaviorSubject<boolean>(false); // Default to logged out
+  private tokenKey = 'auth_token';
+  private userKey = 'current_user';
 
   constructor(private http: HttpClient) {
-    const storedUser = localStorage.getItem('currentUser');
-    if (storedUser) {
-      this.currentUserSubject.next(JSON.parse(storedUser));
+    this.loadStoredUser();
+  }
+
+  private loadStoredUser(): void {
+    const token = localStorage.getItem(this.tokenKey);
+    const userStr = localStorage.getItem(this.userKey);
+    
+    if (token && userStr) {
+      try {
+        const user = JSON.parse(userStr);
+        this.currentUserSubject.next(user);
+      } catch (e) {
+        this.logout();
+      }
     }
   }
 
-  register(name: string, email: string, password: string): Observable<AuthResponse> {
-    return this.http.post<AuthResponse>(`${environment.apiBaseUrl}/auth/register`, { name, email, password });
+  register(firstName: string, lastName: string, email: string, password: string, phone?: string): Observable<any> {
+    return this.http.post(`${this.apiUrl}/register`, { 
+      firstName, 
+      lastName, 
+      email, 
+      password,
+      phone
+    });
   }
 
   login(email: string, password: string): Observable<AuthResponse> {
-    return this.http.post<AuthResponse>(`${environment.apiBaseUrl}/auth/login`, { email, password })
+    return this.http.post<AuthResponse>(`${this.apiUrl}/login`, { email, password })
       .pipe(
         tap(response => {
-          this.setCurrentUser(response);
-          this.isLoggedInSubject.next(true); // Set to logged in
+          this.setSession(response);
         })
       );
   }
 
-  forgotPassword(email: string): Observable<any> {
-    return this.http.post(`${this.apiUrl}/forgot-password`, { email });
+  forgotPassword(email: string, frontendUrl: string = window.location.origin): Observable<any> {
+    return this.http.post(`${this.apiUrl}/forgot-password`, { email, frontendUrl });
   }
 
   resetPassword(token: string, newPassword: string): Observable<any> {
@@ -60,31 +77,28 @@ export class AuthService {
   }
 
   logout(): void {
-    localStorage.removeItem('currentUser');
+    localStorage.removeItem(this.tokenKey);
+    localStorage.removeItem(this.userKey);
     this.currentUserSubject.next(null);
-    this.isLoggedInSubject.next(false); // Set to logged out
-  }
-
-  isAuthenticated(): boolean {
-    return !!this.currentUserSubject.value;
-  }
-
-  private setCurrentUser(user: AuthResponse): void {
-    localStorage.setItem('currentUser', JSON.stringify(user));
-    this.currentUserSubject.next(user);
-  }
-
-  socialLogin(user: any): Observable<AuthResponse> {
-    return this.http.post<AuthResponse>(`${environment.apiBaseUrl}/auth/social-login`, user)
-      .pipe(
-        tap(response => {
-          this.setCurrentUser(response);
-          this.isLoggedInSubject.next(true); // Set to logged in
-        })
-      );
   }
 
   isLoggedIn$(): Observable<boolean> {
-    return this.isLoggedInSubject.asObservable();
+    return this.currentUser$.pipe(
+      map(user => !!user)
+    );
+  }
+
+  getToken(): string | null {
+    return localStorage.getItem(this.tokenKey);
+  }
+
+  getCurrentUser(): any {
+    return this.currentUserSubject.value;
+  }
+
+  private setSession(authResult: AuthResponse): void {
+    localStorage.setItem(this.tokenKey, authResult.token);
+    localStorage.setItem(this.userKey, JSON.stringify(authResult.user));
+    this.currentUserSubject.next(authResult.user);
   }
 }

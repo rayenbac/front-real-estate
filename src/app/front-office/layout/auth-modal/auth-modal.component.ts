@@ -2,7 +2,7 @@ import { Component, EventEmitter, Output, ElementRef, ViewChild } from '@angular
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { Router, RouterModule } from '@angular/router';
-import { AuthService, RegisterData } from '../../../core/services/auth.service';
+import { AuthService } from '../../../core/services/auth.service';
 import Swal from 'sweetalert2';
 
 @Component({
@@ -10,7 +10,7 @@ import Swal from 'sweetalert2';
   standalone: true,
   imports: [CommonModule, ReactiveFormsModule, RouterModule],
   templateUrl: './auth-modal.component.html',
-  styleUrls: ['./auth-modal.component.css'],
+  styleUrls: ['./auth-modal.component.css']
 })
 export class AuthModalComponent {
   @Output() close = new EventEmitter<void>();
@@ -18,7 +18,9 @@ export class AuthModalComponent {
 
   loginForm: FormGroup;
   registerForm: FormGroup;
+  forgotPasswordForm: FormGroup;
   isLoginMode = true;
+  isForgotPasswordMode = false;
   loading = false;
   isVisible = false;
   private triggerElement: HTMLElement | null = null;
@@ -40,12 +42,32 @@ export class AuthModalComponent {
       password: ['', [Validators.required, Validators.minLength(6)]],
       confirmPassword: ['', [Validators.required]],
       phone: [''],
+    }, {
+      validators: this.passwordMatchValidator
+    });
+
+    this.forgotPasswordForm = this.fb.group({
+      email: ['', [Validators.required, Validators.email]]
     });
   }
 
+  private passwordMatchValidator(formGroup: FormGroup) {
+    const password = formGroup.get('password')?.value;
+    const confirmPassword = formGroup.get('confirmPassword')?.value;
+    
+    if (password !== confirmPassword) {
+      formGroup.get('confirmPassword')?.setErrors({ passwordMismatch: true });
+    } else {
+      formGroup.get('confirmPassword')?.setErrors(null);
+    }
+    return null;
+  }
+
   show(triggerElement?: HTMLElement): void {
-    this.triggerElement = triggerElement || null;
     this.isVisible = true;
+    this.triggerElement = triggerElement || null;
+    
+    // Use setTimeout to ensure the modal is in the DOM before focusing
     setTimeout(() => {
       if (this.modal?.nativeElement) {
         this.modal.nativeElement.focus();
@@ -57,7 +79,9 @@ export class AuthModalComponent {
     this.isVisible = false;
     this.loginForm.reset();
     this.registerForm.reset();
+    this.forgotPasswordForm.reset();
     this.isLoginMode = true;
+    this.isForgotPasswordMode = false;
     this.loading = false;
     if (this.triggerElement) {
       this.triggerElement.focus(); // Return focus to the trigger
@@ -84,14 +108,14 @@ export class AuthModalComponent {
           timer: 1500,
         });
         this.closeModal();
-        this.router.navigate(['/']);
+        window.location.reload(); // Reload to update UI based on login state
       },
       error: (error) => {
         this.loading = false;
         Swal.fire({
           icon: 'error',
           title: 'Login Failed',
-          text: error.message || 'Invalid email or password',
+          text: error.error?.message || 'Invalid email or password',
         });
       },
     });
@@ -102,21 +126,11 @@ export class AuthModalComponent {
       return;
     }
 
-    const { firstName, lastName, email, password, confirmPassword } = this.registerForm.value;
-
-    if (password !== confirmPassword) {
-      Swal.fire({
-        icon: 'error',
-        title: 'Registration Failed',
-        text: 'Passwords do not match!',
-      });
-      return;
-    }
+    const { firstName, lastName, email, password, phone } = this.registerForm.value;
 
     this.loading = true;
-    const name = `${firstName} ${lastName}`;
 
-    this.authService.register(name, email, password).subscribe({
+    this.authService.register(firstName, lastName, email, password, phone).subscribe({
       next: () => {
         this.loading = false;
         Swal.fire({
@@ -126,6 +140,7 @@ export class AuthModalComponent {
           timer: 1500,
         });
         this.isLoginMode = true;
+        this.isForgotPasswordMode = false;
         this.registerForm.reset();
       },
       error: (error) => {
@@ -133,9 +148,52 @@ export class AuthModalComponent {
         Swal.fire({
           icon: 'error',
           title: 'Registration Failed',
-          text: error.message || 'Something went wrong',
+          text: error.error?.message || 'Something went wrong',
         });
       },
     });
+  }
+
+  onForgotPassword(): void {
+    if (this.forgotPasswordForm.invalid) {
+      return;
+    }
+
+    this.loading = true;
+    const { email } = this.forgotPasswordForm.value;
+    const frontendUrl = window.location.origin;
+
+    this.authService.forgotPassword(email, frontendUrl).subscribe({
+      next: () => {
+        this.loading = false;
+        Swal.fire({
+          icon: 'success',
+          title: 'Email Sent',
+          text: 'Password reset instructions have been sent to your email.',
+          timer: 3000,
+        });
+        this.isLoginMode = true;
+        this.isForgotPasswordMode = false;
+        this.forgotPasswordForm.reset();
+      },
+      error: (error) => {
+        this.loading = false;
+        Swal.fire({
+          icon: 'error',
+          title: 'Request Failed',
+          text: error.error?.message || 'Failed to send reset email',
+        });
+      },
+    });
+  }
+
+  showForgotPasswordForm(): void {
+    this.isForgotPasswordMode = true;
+    this.isLoginMode = false;
+  }
+
+  backToLogin(): void {
+    this.isForgotPasswordMode = false;
+    this.isLoginMode = true;
   }
 }
