@@ -1,0 +1,144 @@
+<div class="sign_up_modal modal fade" id="authModal" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body container pb20">
+                <div class="row">
+                    <div class="col-lg-12">
+                        <ul class="sign_up_tab nav nav-tabs" id="myTab" role="tablist">
+                            <li class="nav-item">
+                                <a class="nav-link active" id="home-tab" data-toggle="tab" href="#login" role="tab"
+                                    aria-controls="login" aria-selected="true">Login</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" id="profile-tab" data-toggle="tab" href="#register" role="tab"
+                                    aria-controls="register" aria-selected="false">Register</a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="tab-content container" id="myTabContent">
+                    <!-- Login Form -->
+                    <div class="tab-pane fade show active" id="login" role="tabpanel" aria-labelledby="home-tab">
+                        <div class="login_form">
+                            <form [formGroup]="loginForm" (ngSubmit)="onLoginSubmit()">
+                                <div class="heading">
+                                    <h4>Login</h4>
+                                </div>
+                                <div class="form-group">
+                                    <input type="email" class="form-control" formControlName="email"
+                                        [class.is-invalid]="loginEmail?.invalid && loginEmail?.touched"
+                                        placeholder="Email Address">
+                                    <div class="invalid-feedback" *ngIf="loginEmail?.errors?.['required'] && loginEmail?.touched">
+                                        Email is required
+                                    </div>
+                                    <div class="invalid-feedback" *ngIf="loginEmail?.errors?.['email'] && loginEmail?.touched">
+                                        Please enter a valid email address
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <input type="password" class="form-control" formControlName="password"
+                                        [class.is-invalid]="loginPassword?.invalid && loginPassword?.touched"
+                                        placeholder="Password">
+                                    <div class="invalid-feedback"
+                                        *ngIf="loginPassword?.errors?.['required'] && loginPassword?.touched">
+                                        Password is required
+                                    </div>
+                                    <div class="invalid-feedback"
+                                        *ngIf="loginPassword?.errors?.['minlength'] && loginPassword?.touched">
+                                        Password must be at least 6 characters
+                                    </div>
+                                </div>
+                                <div class="form-group custom-control custom-checkbox">
+                                    <input type="checkbox" class="custom-control-input" id="rememberMe">
+                                    <label class="custom-control-label" for="rememberMe">Remember me</label>
+                                    <a class="btn-fpswd float-right" (click)="forgotPassword()">Forgot password?</a>
+                                </div>
+                                <button type="submit" [disabled]="loginForm.invalid || loading" class="btn btn-log btn-block btn-thm2">
+                                    {{ loading ? 'Logging in...' : 'Login' }}
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                    <!-- Register Form -->
+                    <div class="tab-pane fade" id="register" role="tabpanel" aria-labelledby="profile-tab">
+                        <div class="sign_up_form">
+                            <form [formGroup]="registerForm" (ngSubmit)="onRegisterSubmit()">
+                                <div class="heading">
+                                    <h4>Register</h4>
+                                </div>
+                                <div class="form-group">
+                                    <input type="text" class="form-control" formControlName="firstName"
+                                        [class.is-invalid]="firstName?.invalid && firstName?.touched"
+                                        placeholder="First Name">
+                                    <div class="invalid-feedback" *ngIf="firstName?.errors?.['required'] && firstName?.touched">
+                                        First name is required
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <input type="text" class="form-control" formControlName="lastName"
+                                        [class.is-invalid]="lastName?.invalid && lastName?.touched"
+                                        placeholder="Last Name">
+                                    <div class="invalid-feedback" *ngIf="lastName?.errors?.['required'] && lastName?.touched">
+                                        Last name is required
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <input type="email" class="form-control" formControlName="email"
+                                        [class.is-invalid]="registerEmail?.invalid && registerEmail?.touched"
+                                        placeholder="Email">
+                                    <div class="invalid-feedback"
+                                        *ngIf="registerEmail?.errors?.['required'] && registerEmail?.touched">
+                                        Email is required
+                                    </div>
+                                    <div class="invalid-feedback"
+                                        *ngIf="registerEmail?.errors?.['email'] && registerEmail?.touched">
+                                        Please enter a valid email address
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <input type="password" class="form-control" formControlName="password"
+                                        [class.is-invalid]="registerPassword?.invalid && registerPassword?.touched"
+                                        placeholder="Password">
+                                    <div class="invalid-feedback"
+                                        *ngIf="registerPassword?.errors?.['required'] && registerPassword?.touched">
+                                        Password is required
+                                    </div>
+                                    <div class="invalid-feedback"
+                                        *ngIf="registerPassword?.errors?.['minlength'] && registerPassword?.touched">
+                                        Password must be at least 6 characters
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <input type="password" class="form-control" formControlName="confirmPassword"
+                                        [class.is-invalid]="confirmPassword?.invalid && confirmPassword?.touched"
+                                        placeholder="Confirm Password">
+                                    <div class="invalid-feedback"
+                                        *ngIf="confirmPassword?.errors?.['required'] && confirmPassword?.touched">
+                                        Please confirm your password
+                                    </div>
+                                    <div class="invalid-feedback"
+                                        *ngIf="confirmPassword?.errors?.['passwordMismatch'] && confirmPassword?.touched">
+                                        Passwords do not match
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <input type="tel" class="form-control" formControlName="phone"
+                                        placeholder="Phone Number (Optional)">
+                                </div>
+                                <button type="submit" [disabled]="registerForm.invalid || loading"
+                                    class="btn btn-log btn-block btn-thm2">
+                                    {{ loading ? 'Creating Account...' : 'Register' }}
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div> 

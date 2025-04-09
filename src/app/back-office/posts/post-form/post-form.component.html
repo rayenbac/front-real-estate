@@ -1,0 +1,63 @@
+<section class="our-dashbord dashbord bgc-f7 pb50">
+  <div class="container-fluid">
+      <div class="row">
+          <div class="col-lg-3 col-xl-2 dn-992 pl0"></div>
+          <div class="col-lg-9 col-xl-10 maxw100flex-992">
+              <div class="row">
+                  <div class="col-lg-12">
+                      <div class="dashboard_navigationbar dn db-992">
+                          <div class="dropdown">
+                              <button class="dropbtn"><i class="fa fa-bars pr10"></i> Dashboard Navigation</button>
+                          </div>
+                      </div>
+                  </div>
+                  <div class="col-lg-12">
+                      <div class="my_dashboard_review mb40">
+                          <div class="row">
+                              <div class="col-lg-12">
+                                  <h3 class="mb30">{{ isEditMode ? 'Edit Post' : 'Create New Post' }}</h3>
+                              </div>
+                              <div class="col-lg-12">
+                                  <form [formGroup]="postForm" (ngSubmit)="onSubmit()" class="my_profile_form_area">
+                                      <div class="row">
+                                          <div class="col-lg-12">
+                                              <div class="my_profile_input form-group">
+                                                  <label>Title</label>
+                                                  <input type="text" formControlName="title" class="form-control" placeholder="Title">
+                                              </div>
+                                          </div>
+                                          <div class="col-lg-12">
+                                              <div class="my_profile_input form-group">
+                                                  <label>Description</label>
+                                                  <textarea class="form-control" formControlName="description" placeholder="Description" rows="5"></textarea>
+                                              </div>
+                                          </div>
+                                          <div class="col-lg-6">
+                                              <div class="my_profile_check_box form-group">
+                                                  <input type="checkbox" formControlName="published" id="published">
+                                                  <label for="published">Published</label>
+                                              </div>
+                                          </div>
+                                          <div class="col-lg-6">
+                                              <div class="my_profile_input form-group">
+                                                  <label>Likes</label>
+                                                  <input type="number" formControlName="likes" class="form-control" placeholder="Likes">
+                                              </div>
+                                          </div>
+                                          <div class="col-lg-12">
+                                              <button type="submit" class="btn btn-thm" >
+                                                  {{ isEditMode ? 'Update Post' : 'Create Post' }}
+                                              </button>
+                                          </div>
+                                      </div>
+                                  </form>
+                              </div>
+                          </div>
+                      </div>
+                  </div>
+              </div>
+          </div>
+      </div>
+  </div>
+</section>
+

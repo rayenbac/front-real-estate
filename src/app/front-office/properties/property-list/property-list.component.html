@@ -1,0 +1,107 @@
+<!-- Feature Properties -->
+<section id="feature-property" class="feature-property mt80 pb50">
+  <div class="container-fluid ovh">
+    <div class="row">
+      <div class="col-lg-12">
+        <div class="main-title mb40">
+          <h2>Featured Properties</h2>
+          <p>Handpicked properties by our team. 
+            <a class="float-right" routerLink="/properties">
+              View All <span class="flaticon-next"></span>
+            </a>
+          </p>
+        </div>
+      </div>
+
+      <!-- Loading State -->
+      <div class="col-lg-12" *ngIf="loading">
+        <div class="text-center">
+          <div class="spinner-border text-primary" role="status">
+            <span class="visually-hidden">Loading...</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Error State -->
+      <div class="col-lg-12" *ngIf="error">
+        <div class="alert alert-danger" role="alert">
+          {{ error }}
+        </div>
+      </div>
+
+      <!-- Properties Grid -->
+      <div class="col-lg-12" *ngIf="!loading && !error">
+        <div class="feature_property_home3_slider">
+          <div class="row">
+            <div class="col-md-6 col-lg-4" *ngFor="let property of displayedProperties">
+              <div class="feat_property home3">
+                <div class="thumb">
+                  <img class="img-whp" [src]="getImageUrl(property.media)" alt="Property Image">
+                  [alt]="property.title">
+                  <div class="thmb_cntnt">
+                    <ul class="tag mb0">
+                      <li class="list-inline-item">
+                        <a href="javascript:void(0)">
+                          {{ property.listingType === 'rent' ? 'For Rent' : 'For Sale' }}
+                        </a>
+                      </li>
+                      <li class="list-inline-item" *ngIf="property.featured">
+                        <a href="javascript:void(0)">Featured</a>
+                      </li>
+                    </ul>
+                    <ul class="icon mb0">
+                      <li class="list-inline-item">
+                        <a href="javascript:void(0)"><span class="flaticon-heart"></span></a>
+                      </li>
+                    </ul>
+                    <a class="fp_price" href="javascript:void(0)">
+                      {{ property.pricing.currency }}{{ property.pricing.price }}
+                      <small *ngIf="property.listingType === 'rent'">/mo</small>
+                    </a>
+                  </div>
+                </div>
+                <div class="details">
+                  <div class="tc_content">
+                    <p class="text-thm">{{ property.type }}</p>
+                    <h4>{{ property.title }}</h4>
+                    <p>
+                      <span class="flaticon-placeholder"></span>
+                      {{ property.address.street }}, {{ property.address.city }}, {{ property.address.state }}
+                    </p>
+                    <ul class="prop_details mb0">
+                      <li class="list-inline-item">
+                        <a href="javascript:void(0)">Beds: {{ property.bedrooms }}</a>
+                      </li>
+                      <li class="list-inline-item">
+                        <a href="javascript:void(0)">Baths: {{ property.bathrooms }}</a>
+                      </li>
+                      <li class="list-inline-item">
+                        <a href="javascript:void(0)">
+                          {{ property.size.total }} {{ property.size.unit }}
+                        </a>
+                      </li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- View All Button -->
+        <div class="text-center mt-4">
+          <a routerLink="/properties" class="btn btn-thm">View All Properties</a>
+        </div>
+
+        <!-- No Properties Message -->
+        <div *ngIf="!loading && !error && properties.length === 0" 
+             class="text-center p-5">
+          <h3>No properties available</h3>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+<section class="our-listing bgc-f7 pb30-991 mt85 md-mt0">
+  
+</section>
